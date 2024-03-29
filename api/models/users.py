@@ -12,7 +12,7 @@ class UserModel(db.Model):
     is_staff = db.Column(db.Boolean(), default=False)
     is_active = db.Column(db.Boolean(), default=False)
     date_created = db.Column(db.DateTime(), default=datetime.now)
-    orders = db.relationship('OrderModel', backref='customer', lazy=True)
+    orders = db.relationship('OrderModel', backref='customer_order', lazy=True)
 
     def __repr__(self):
         return f"<User {self.username}>"
