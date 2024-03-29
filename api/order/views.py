@@ -1,5 +1,8 @@
 from http import HTTPStatus
+from flask_jwt_extended import jwt_required, get_jwt_identity
 from flask_restx import Namespace, Resource, fields
+
+from api.models.users import UserModel
 from ..models.orders import OrderModel
 
 
@@ -27,17 +30,38 @@ order_model = order_namespace.model(
 class OrderGetCreate(Resource):
 
     @order_namespace.marshal_with(order_model)
+    @jwt_required()
     def get(self):
         """
         Get all Orders
         """
         return OrderModel.query.all(), HTTPStatus.OK
 
+    @order_namespace.expect(order_model)
+    @order_namespace.marshal_with(order_model)
+    @jwt_required()
     def post(self):
         """
         Place a new order
         """
-        pass
+
+        username = get_jwt_identity()
+
+        current_user = UserModel.query.filter_by(username=username).first()
+
+        data = order_namespace.payload
+
+        new_order = OrderModel(
+            size=data['size'],
+            quantity=data['quantity'],
+            flavour=data['flavour'],
+        )
+
+        new_order.customer = current_user.id
+
+        new_order.save()
+
+        return new_order, HTTPStatus.CREATED
 
 
 @order_namespace.route("/<int:order_id>/")
