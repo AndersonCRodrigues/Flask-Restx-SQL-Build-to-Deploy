@@ -68,6 +68,7 @@ class OrderGetCreate(Resource):
 class GetUpdateDelete(Resource):
 
     @order_namespace.marshal_with(order_model)
+    @jwt_required()
     def get(self, order_id):
         """
         Retrive an order by id
