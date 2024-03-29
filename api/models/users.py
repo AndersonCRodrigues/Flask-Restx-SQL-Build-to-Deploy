@@ -15,7 +15,7 @@ class UserModel(db.Model):
     orders = db.relationship('OrderModel', backref='customer_order', lazy=True)
 
     def __repr__(self):
-        return f"<User {self.username}>"
+        return f"<User {self.id} {self.username}>"
 
     def save(self):
         db.session.add(self)
