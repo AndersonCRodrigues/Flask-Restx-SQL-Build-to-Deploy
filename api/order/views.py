@@ -52,9 +52,9 @@ class OrderGetCreate(Resource):
         data = order_namespace.payload
 
         new_order = OrderModel(
-            size=data['size'],
-            quantity=data['quantity'],
-            flavour=data['flavour'],
+            size=data["size"],
+            quantity=data["quantity"],
+            flavour=data["flavour"],
         )
 
         new_order.customer = current_user.id
@@ -67,11 +67,12 @@ class OrderGetCreate(Resource):
 @order_namespace.route("/<int:order_id>/")
 class GetUpdateDelete(Resource):
 
+    @order_namespace.marshal_with(order_model)
     def get(self, order_id):
         """
         Retrive an order by id
         """
-        pass
+        return OrderModel.get_by_id(order_id), HTTPStatus.OK
 
     def put(self, order_id):
         """
