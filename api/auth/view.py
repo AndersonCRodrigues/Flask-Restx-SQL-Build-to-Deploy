@@ -110,7 +110,7 @@ class Refresh(Resource):
     @jwt_required(refresh=True)
     def post(self):
         """
-            Generete a nwe access token
+            Generete a new access token
         """
         username = get_jwt_identity()
 
