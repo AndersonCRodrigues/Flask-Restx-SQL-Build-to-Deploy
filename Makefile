@@ -6,7 +6,7 @@ secret:
 
 
 run:
-	@python runserver.py
+	@python3 runserver.py
 
 token:
 	@python -c 'import secrets; print(secrets.token_hex(64))'

@@ -23,10 +23,10 @@ order_model = order_namespace.model(
 )
 
 
-@order_namespace.route("/orders")
+@order_namespace.route("/")
 class OrderGetCreate(Resource):
 
-    @order_model
+    @order_namespace.marshal_with(order_model)
     def get(self):
         """
         Get all Orders
@@ -40,7 +40,7 @@ class OrderGetCreate(Resource):
         pass
 
 
-@order_namespace.route("/order/<int:order_id>")
+@order_namespace.route("/<int:order_id>/")
 class GetUpdateDelete(Resource):
 
     def get(self, order_id):
@@ -72,7 +72,7 @@ class GetSpecificOrderByUser(Resource):
         pass
 
 
-@order_namespace.route("/user/<int:user_id>/orders")
+@order_namespace.route("/user/<int:user_id>/orders/")
 class UserOrders(Resource):
 
     def get(self, user_id):
@@ -82,7 +82,7 @@ class UserOrders(Resource):
         pass
 
 
-@order_namespace.route("/order/status/<int:order_id>")
+@order_namespace.route("/status/<int:order_id>/")
 class UpdateOrderStatus(Resource):
 
     def patch(self, order_id):
