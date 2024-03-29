@@ -95,17 +95,20 @@ class GetSpecificOrderByUser(Resource):
         """
         Get a user's specific order
         """
-        pass
 
 
-@order_namespace.route("/user/<int:user_id>/orders/")
+@order_namespace.route("/user/<int:user_id>/")
 class UserOrders(Resource):
 
+    @order_namespace.marshal_list_with(order_model)
+    @jwt_required()
     def get(self, user_id):
         """
-        Get all orders by a specific
+        Get all orders by a specific user
         """
-        pass
+        user = UserModel.get_by_id(user_id)
+
+        return user.orders, HTTPStatus.OK
 
 
 @order_namespace.route("/status/<int:order_id>/")
