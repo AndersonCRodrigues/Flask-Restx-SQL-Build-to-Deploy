@@ -98,11 +98,20 @@ class GetUpdateDelete(Resource):
 
         return order_to_update, HTTPStatus.OK
 
+    @jwt_required()
     def delete(self, order_id):
         """
         Delete an order with id
         """
-        pass
+        if order_to_delete := OrderModel.get_by_id(order_id):
+            order_to_delete.delete()
+
+            return (
+                {"message": f"Order with id {order_id} has been deleted"},
+                HTTPStatus.OK,
+            )
+
+        return ({"mesage": "Order not found"}, HTTPStatus.NOT_FOUND)
 
 
 @order_namespace.route("/user/<int:user_id>/order/<int:order_id>/")
