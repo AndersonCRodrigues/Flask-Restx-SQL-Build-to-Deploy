@@ -91,10 +91,22 @@ class GetUpdateDelete(Resource):
 @order_namespace.route("/user/<int:user_id>/order/<int:order_id>/")
 class GetSpecificOrderByUser(Resource):
 
+    @order_namespace.marshal_with(order_model)
+    @jwt_required()
     def get(self, user_id, order_id):
         """
         Get a user's specific order
         """
+
+        if current_user := UserModel.query.filter_by(id=user_id).first():
+            if order := OrderModel.query.filter_by(
+                id=order_id, customer=current_user.id
+            ).first():
+                return order, HTTPStatus.OK
+            else:
+                return {"message": "Order not found"}, HTTPStatus.NOT_FOUND
+        else:
+            return {"message": "User not found"}, HTTPStatus.NOT_FOUND
 
 
 @order_namespace.route("/user/<int:user_id>/")
