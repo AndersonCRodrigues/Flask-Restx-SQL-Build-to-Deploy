@@ -4,6 +4,7 @@ from flask_restx import Namespace, Resource, fields
 
 from api.models.users import UserModel
 from ..models.orders import OrderModel
+from ..utils import db
 
 
 order_namespace = Namespace("orders", description="Namespace for order")
@@ -21,6 +22,9 @@ order_model = order_namespace.model(
             description="The status of the Order",
             required=True,
             enum=["PENDING" "IN_TRANSIT", "DELIVERED"],
+        ),
+        "flavour": fields.String(
+            description="Flavour of order",
         ),
     },
 )
@@ -75,11 +79,24 @@ class GetUpdateDelete(Resource):
         """
         return OrderModel.get_by_id(order_id), HTTPStatus.OK
 
+    @order_namespace.expect(order_model)
+    @order_namespace.marshal_with(order_model)
+    @jwt_required()
     def put(self, order_id):
         """
         Update an order with id
         """
-        pass
+        order_to_update = OrderModel.get_by_id(order_id)
+
+        data = order_namespace.payload
+
+        order_to_update.quantity = data["quantity"]
+        order_to_update.size = data["size"]
+        order_to_update.flavour = data["flavour"]
+
+        db.session.commit()
+
+        return order_to_update, HTTPStatus.OK
 
     def delete(self, order_id):
         """
