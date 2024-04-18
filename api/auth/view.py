@@ -9,6 +9,7 @@ from flask_jwt_extended import (
 from flask_restx import Namespace, Resource, fields
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..models.users import UserModel
+from werkzeug.exceptions import Conflict
 
 
 auth_namespace = Namespace("auth", description="Namespace for authentication")
@@ -57,15 +58,22 @@ class SignUp(Resource):
 
         data = request.get_json()
 
-        new_user = UserModel(
-            username=data.get("username"),
-            email=data.get("email"),
-            password_hash=generate_password_hash(data.get("password")),
-        )
+        try:
 
-        new_user.save()
+            new_user = UserModel(
+                username=data.get("username"),
+                email=data.get("email"),
+                password_hash=generate_password_hash(data.get("password")),
+            )
 
-        return new_user, HTTPStatus.CREATED
+            new_user.save()
+
+            return new_user, HTTPStatus.CREATED
+
+        except Exception as e:
+            raise Conflict(
+                f"User with email {data.get('email')} exists!",
+            ) from e
 
 
 @auth_namespace.route("/login")
@@ -110,7 +118,7 @@ class Refresh(Resource):
     @jwt_required(refresh=True)
     def post(self):
         """
-            Generete a new access token
+        Generete a new access token
         """
         username = get_jwt_identity()
 
