@@ -30,7 +30,7 @@ order_model = order_namespace.model(
 )
 
 order_status_model = order_namespace.model(
-    "OrderStatys",
+    "OrderStatus",
     {
         "order_status": fields.String(
             required=True,
