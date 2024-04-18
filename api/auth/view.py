@@ -9,7 +9,7 @@ from flask_jwt_extended import (
 from flask_restx import Namespace, Resource, fields
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..models.users import UserModel
-from werkzeug.exceptions import Conflict
+from werkzeug.exceptions import Conflict, BadRequest
 
 
 auth_namespace = Namespace("auth", description="Namespace for authentication")
@@ -105,11 +105,7 @@ class Login(Resource):
 
             return response, HTTPStatus.OK
 
-        else:
-            return (
-                {"message": "Invalid email or password"},
-                HTTPStatus.NOT_FOUND,
-            )
+        raise BadRequest("Invadid Username or Password")
 
 
 @auth_namespace.route("/refresh")
