@@ -16,12 +16,12 @@ order_model = order_namespace.model(
         "size": fields.String(
             description="Size of order",
             required=True,
-            enum=["SMAL", "MEDIUM", "LARGE", "EXTRA_LARGE"],
+            enum=["SMALL", "MEDIUM", "LARGE", "EXTRA_LARGE"],
         ),
         "order_status": fields.String(
             description="The status of the Order",
             required=True,
-            enum=["PENDING" "IN_TRANSIT", "DELIVERED"],
+            enum=["PENDING", "IN_TRANSIT", "DELIVERED"],
         ),
         "flavour": fields.String(
             description="Flavour of order",
