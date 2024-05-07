@@ -10,3 +10,6 @@ run:
 
 token:
 	@python -c 'import secrets; print(secrets.token_hex(64))'
+
+test:
+	@pytest
