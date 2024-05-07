@@ -9,7 +9,11 @@ from flask_jwt_extended import (
 from flask_restx import Namespace, Resource, fields
 from werkzeug.security import generate_password_hash, check_password_hash
 from ..models.users import UserModel
-from werkzeug.exceptions import Conflict, BadRequest
+from werkzeug.exceptions import (
+    Conflict,
+    NotFound,
+    Unauthorized,
+)
 
 
 auth_namespace = Namespace("auth", description="Namespace for authentication")
@@ -92,20 +96,21 @@ class Login(Resource):
 
         user = UserModel.query.filter_by(email=email).first()
 
-        check_password = check_password_hash(user.password_hash, password)
+        if user is None:
+            raise NotFound("User not found")
 
-        if user is not None and check_password:
-            access_token = create_access_token(user.username)
-            refresh_token = create_refresh_token(user.username)
+        if not check_password_hash(user.password_hash, password):
+            raise Unauthorized("Invalid password")
 
-            response = {
-                "access_token": access_token,
-                "refresh_token": refresh_token,
-            }
+        access_token = create_access_token(user.username)
+        refresh_token = create_refresh_token(user.username)
 
-            return response, HTTPStatus.OK
+        response = {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+        }
 
-        raise BadRequest("Invadid Username or Password")
+        return response, HTTPStatus.OK
 
 
 @auth_namespace.route("/refresh")
