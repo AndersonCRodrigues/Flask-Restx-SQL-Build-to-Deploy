@@ -37,3 +37,15 @@ class OrderTestcase(unittest.TestCase):
         assert response.status_code == 200
 
         assert response.json == []
+
+    def test_create_order(self):
+
+        data = {"quantity": 3, "size": "MEDIUM", "flavour": "Banana"}
+
+        token = create_access_token(identity="testuser")
+
+        headers = {"Authorization": f"Bearer {token}"}
+
+        response = self.client.post("/orders/", json=data, headers=headers)
+
+        assert response.status_code == 201
