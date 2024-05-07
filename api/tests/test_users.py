@@ -2,7 +2,6 @@ import unittest
 from .. import create_app
 from ..config.config import config_dict
 from ..utils import db
-from werkzeug.security import generate_password_hash
 from ..models.users import UserModel
 
 
@@ -42,3 +41,13 @@ class UserTest(unittest.TestCase):
 
         assert response.status_code == 201
         assert user.username == "testuser"
+
+    def test_login(self):
+        data = {
+            "email": "test@email.com",
+            "password": "password",
+        }
+
+        response = self.client.post("/auth/login", json=data)
+
+        assert response.status_code == 404
