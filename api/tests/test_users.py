@@ -18,4 +18,10 @@ class UserTest(unittest.TestCase):
         db.create_all()
 
     def tearDown(self):
-        pass
+        db.drop_all()
+
+        self.appctx.pop()
+
+        self.app = None
+
+        self.client = None
