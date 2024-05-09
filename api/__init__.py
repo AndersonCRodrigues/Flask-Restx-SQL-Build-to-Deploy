@@ -16,10 +16,21 @@ def create_app(config=config_dict["dev"]):
 
     app.config.from_object(config)
 
+    authorizations = {
+        "Baerer Auth": {
+            "type": "apiKey",
+            "in": "header",
+            "namer": "Authorization",
+            "description": "Add a JWT with ** Bearer &lt;JWT&gt; to authorize",
+        }
+    }
+
     api = Api(
         app,
         title="Pizza Delivery API",
         description="A REST API for a Pizza Delivery service",
+        authorizations=authorizations,
+        security="Bearer Auth",
     )
 
     api.add_namespace(order_namespace)
