@@ -45,6 +45,7 @@ order_status_model = order_namespace.model(
 class OrderGetCreate(Resource):
 
     @order_namespace.marshal_with(order_model)
+    @order_namespace.doc(description="Retriver all orders")
     @jwt_required()
     def get(self):
         """
