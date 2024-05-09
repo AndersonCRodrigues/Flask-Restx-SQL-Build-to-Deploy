@@ -6,7 +6,7 @@ secret:
 
 
 run:
-	@python3 runserver.py
+	@python3 wsgi.py
 
 token:
 	@python -c 'import secrets; print(secrets.token_hex(64))'
