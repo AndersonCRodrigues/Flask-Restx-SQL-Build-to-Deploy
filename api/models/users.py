@@ -8,7 +8,7 @@ class UserModel(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     username = db.Column(db.String(45), nullable=False, unique=True)
     password_hash = db.Column(db.String(45), nullable=False)
-    email = db.Column(db.Text(50), nullable=False, unique=True)
+    email = db.Column(db.Text, nullable=False, unique=True)
     is_staff = db.Column(db.Boolean(), default=False)
     is_active = db.Column(db.Boolean(), default=False)
     date_created = db.Column(db.DateTime(), default=datetime.now)
