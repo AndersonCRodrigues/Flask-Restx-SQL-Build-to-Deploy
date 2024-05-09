@@ -31,7 +31,11 @@ class TestConfig(Config):
 
 
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = config("DATABASE_URL", default=None)
+    uri = config("DATABASE_URL", default=None)
+    if uri.startswith("postgres://"):
+        uri = uri.replace("postgres://", "postgresql://", 1)
+
+    SQLALCHEMY_DATABASE_URI = uri
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = config("DEBUG", default=False, cast=bool)
 
