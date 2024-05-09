@@ -8,6 +8,9 @@ secret:
 run:
 	@python3 wsgi.py
 
+wsgi:
+	@gunicorn wsgi:app
+
 token:
 	@python -c 'import secrets; print(secrets.token_hex(64))'
 
